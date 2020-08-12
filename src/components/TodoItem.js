@@ -38,13 +38,14 @@ TodoItem.propTypes = {
 };
 
 const btnStyle = {
-  background: "#FF0000",
+  background: "#0892D0",
   color: "#FFF",
   border: "none",
   padding: "5px 8px",
   borderRadius: "50%",
   cursor: "pointer",
   float: "right",
+  fontWeight: "700",
 };
 
 export default TodoItem;
