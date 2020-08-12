@@ -4,30 +4,22 @@ import Todos from "./components/Todos";
 import Header from "./components/layout/Header";
 import AddTodo from "./components/AddTodo";
 import About from "./components/pages/About";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 import "./App.css";
 
 class App extends Component {
   // this state goes in top level component so it can be passed down to other components
   state = {
-    todos: [
-      {
-        id: uuidv4(),
-        title: "Take out the trash",
-        completed: false,
-      },
-      {
-        id: uuidv4(),
-        title: "Dinner with wife",
-        completed: false,
-      },
-      {
-        id: uuidv4(),
-        title: "Feed the dog",
-        completed: false,
-      },
-    ],
+    todos: [],
   };
+
+  // on load
+  componentDidMount() {
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos?_limit=10")
+      .then((res) => this.setState({ todos: res.data }));
+  }
 
   // toggle completed
   markComplete = (id) => {
@@ -44,24 +36,29 @@ class App extends Component {
 
   // delete todo
   delTodo = (id) => {
-    this.setState({
-      // copy everything already in state by using the spread operator (...)
-      // filter for each todo, return any todo where the id !== id we passed selected
-      todos: [...this.state.todos.filter((todo) => todo.id !== id)],
-    });
+    axios
+      .delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then((res) => {
+        this.setState({
+          // copy everything already in state by using the spread operator (...)
+          // filter for each todo, return any todo where the id !== id we passed selected
+          todos: [...this.state.todos.filter((todo) => todo.id !== id)],
+        });
+      });
   };
 
   // add todo
   addTodo = (title) => {
-    const newTodo = {
-      id: uuidv4(),
-      title,
-      completed: false,
-    };
-
-    this.setState({
-      todos: [...this.state.todos, newTodo],
-    });
+    axios
+      .post("https://jsonplaceholder.typicode.com/todos", {
+        title,
+        completed: false,
+      })
+      .then((res) => {
+        this.setState({
+          todos: [...this.state.todos, res.data],
+        });
+      });
   };
 
   render() {
