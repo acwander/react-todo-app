@@ -14,7 +14,7 @@ class App extends Component {
       {
         id: 2,
         title: "Dinner with wife",
-        completed: true,
+        completed: false,
       },
       {
         id: 3,
@@ -24,11 +24,37 @@ class App extends Component {
     ],
   };
 
+  // toggle completed
+  markComplete = (id) => {
+    this.setState({
+      todos: this.state.todos.map((todo) => {
+        if (todo.id === id) {
+          // toggle true/false
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      }),
+    });
+  };
+
+  // delete todo
+  delTodo = (id) => {
+    this.setState({
+      // copy everything already in state by using the spread operator (...)
+      // filter for each todo, return any todo where the id !== id we passed selected
+      todos: [...this.state.todos.filter((todo) => todo.id !== id)],
+    });
+  };
+
   render() {
     return (
       <div className="App">
         {/* passes state to the todos component as a prop */}
-        <Todos todos={this.state.todos} />
+        <Todos
+          todos={this.state.todos}
+          markComplete={this.markComplete}
+          delTodo={this.delTodo}
+        />
       </div>
     );
   }
